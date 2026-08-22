@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Page 404 de GitHub Pages, détournée en AIGUILLEUR : Pages sert ce
+     fichier pour tout chemin inconnu, ce qui permet de capter les liens
+     d'invitation /lists/join/{token} de l'app mobile sans aucun serveur.
+     RÈGLE DE SÉCURITÉ : le token ne quitte JAMAIS cette page — aucune
+     requête externe, aucun script tiers, injection uniquement via des
+     attributs/du texte après validation stricte par regex. -->
+<meta name="robots" content="noindex">
+<title>Kiroku Sekai</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, system-ui, sans-serif; max-width: 680px;
+         margin: 0 auto; padding: 48px 20px 64px; line-height: 1.6; }
+  h1 { font-size: 1.7rem; margin-bottom: .25rem; }
+  .lede { font-size: 1.05rem; opacity: .85; margin-top: 0; }
+  .hidden { display: none; }
+  .btn { display: inline-block; padding: 10px 22px; border-radius: 999px;
+         background: #f0603f; color: #fff; font-weight: 700;
+         text-decoration: none; border: none; font-size: 1rem; cursor: pointer; }
+  .btn.ghost { background: transparent; color: inherit;
+               border: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 1.5rem 0; }
+  .hint { opacity: .75; font-size: .92rem; }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid;
+           border-color: color-mix(in srgb, currentColor 20%, transparent); }
+  small { opacity: .7; }
+</style>
+</head>
+<body>
+
+<section id="invite" class="hidden">
+  <h1>Invitation à une liste Kiroku</h1>
+  <p class="lede">On t'a partagé une liste sur Kiroku Sekai.</p>
+  <div class="actions">
+    <a id="open-app" class="btn" href="#">Ouvrir dans Kiroku</a>
+    <button id="copy-link" class="btn ghost" type="button">Copier le lien</button>
+  </div>
+  <p class="hint">Si rien ne s'ouvre : installe Kiroku Sekai, puis dans
+  l'onglet <strong>Listes</strong> choisis « Rejoindre via un lien » et colle
+  ce lien.</p>
+</section>
+
+<section id="notfound" class="hidden">
+  <h1>Page introuvable</h1>
+  <p class="lede">Cette adresse ne correspond à aucune page.</p>
+  <p><a href="/">Retour à l'accueil</a></p>
+</section>
+
+<footer>
+<p><small><strong>DE BAKKER</strong> — <a href="/">kiroku.debakker.fr</a> ·
+<a href="./privacy.html">Confidentialité</a> ·
+<a href="./support.html">Assistance</a></small></p>
+</footer>
+
+<script>
+  (function () {
+    "use strict";
+    // Même famille de tokens que l'app (UUID en pratique) : validation
+    // stricte AVANT toute utilisation — un chemin forgé ne peut injecter ni
+    // HTML ni schéma d'URL.
+    var match = location.pathname.match(/^\/lists\/join\/([A-Za-z0-9_-]{8,100})\/?$/);
+    if (!match) {
+      document.getElementById("notfound").classList.remove("hidden");
+      return;
+    }
+    var token = match[1];
+    document.getElementById("invite").classList.remove("hidden");
+
+    // Schéma custom de l'app — le chemin est identique à l'URL web, la route
+    // expo-router `lists/join/[token]` le reçoit tel quel.
+    document.getElementById("open-app").setAttribute(
+      "href",
+      "kiroku://lists/join/" + token
+    );
+
+    var copyBtn = document.getElementById("copy-link");
+    copyBtn.addEventListener("click", function () {
+      var url = "https://kiroku.debakker.fr/lists/join/" + token;
+      var done = function () {
+        copyBtn.textContent = "Lien copié !";
+        setTimeout(function () { copyBtn.textContent = "Copier le lien"; }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, function () {});
+      } else {
+        // Vieux navigateurs in-app : sélection manuelle via prompt.
+        window.prompt("Copie ce lien :", url);
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

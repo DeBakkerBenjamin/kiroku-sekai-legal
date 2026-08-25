@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "fr.debakker.kiroku",
+      "sha256_cert_fingerprints": [
+        "CF:6E:B2:01:91:0E:2D:FB:D3:8E:24:F4:A3:D4:4A:B6:31:E7:EA:A6:38:34:3B:87:65:33:9D:04:16:1A:AA:CB",
+        "58:5B:6F:1D:B8:5F:AA:A7:D8:D9:29:E6:FB:4C:D3:03:C7:1B:97:57:CF:73:FB:D7:87:97:DE:84:5C:6C:9C:8A"
+      ]
+    }
+  }
+]
